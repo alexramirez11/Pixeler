@@ -82,11 +82,11 @@ public class PixelScene extends Scene {
     private PixelPane pixelPane;
     private ScrollPane scrollPane;
     private LinkedList<Button> loadList;
-    private Image bucketOnImage = new Image("Saved_Images/bucket-on.png");
-    private Image bucketOffImage = new Image("Saved_Images/bucket-off.png");
+    private Image bucketOnImage = new Image("assets/bucket-on.png");
+    private Image bucketOffImage = new Image("assets/bucket-off.png");
     private ImageView bucketView = new ImageView(bucketOffImage);
-    private Image magnifyOnImage = new Image("Saved_Images/magnifying_on.png");
-    private Image magnifyOffImage = new Image("Saved_Images/magnifying_off.png");
+    private Image magnifyOnImage = new Image("assets/magnifying_on.png");
+    private Image magnifyOffImage = new Image("assets/magnifying_off.png");
     private ImageView finderView = new ImageView(magnifyOffImage);
     private MenuButton saveOptions;
     
@@ -482,11 +482,6 @@ public class PixelScene extends Scene {
      * @param name String representation of the name of the PixelPane to save
      */
     private void processSave(String name) {
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy 'at' h:mm a");
-        pixelPane.setLastSavedTime(now.format(formatter));
-        saveMessage.setText("Last saved on:\n" + pixelPane.getLastSavedTime());
-
         File boardData = SAVED_IMAGES_DATA_DIR.resolve(name + ".txt").toFile();
         try {
             FileWriter writer = new FileWriter(boardData);
@@ -502,10 +497,14 @@ public class PixelScene extends Scene {
             writer.close();
             pixelPane.setName(name);
             canvasName.setText("Canvas Name:\n" + pixelPane);
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy 'at' h:mm a");
+            pixelPane.setLastSavedTime(now.format(formatter));
+            saveMessage.setText("Last saved on:\n" + pixelPane.getLastSavedTime());
+            exportOnly(name, new ExportSettings(FONT_COLOR, false, 1));
             
         } catch (IOException e) {
-            System.err.println("Error: Failed to save Image Data: " + e.getMessage());
-            System.exit(1); // TODO: eventually make a screen for failed saves and troubleshooting methods!
+            showErrorDialog("Save Failed", "Pixeler was unable to save your canvas.\n\nYour changes have not been saved. Please check that you have enough storage space and permission to save files, then try again.\n", e);
         }
     }
 
