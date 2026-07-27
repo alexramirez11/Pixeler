@@ -442,6 +442,7 @@ public class PixelScene extends Scene {
         grid.add(removeCheck, 1, 1);
         grid.add(new Label("Scale Value (nearest neighbor)"), 0, 2);
         grid.add(box, 1, 2);
+        grid.add(new Label("This image will be saved in your Downloads directory"), 0, 3);
         
         dialog.getDialogPane().setContent(grid);
 
@@ -457,19 +458,23 @@ public class PixelScene extends Scene {
             return;
         }
 
-        exportOnly(pixelPane + "", settings);
+        exportOnly(pixelPane + "", settings, true);
     }
 
-    private void exportOnly(String name, ExportSettings settings) {
+    private void exportOnly(String name, ExportSettings settings, boolean toDownloads) {
         WritableImage image = pixelPane.exportImage(settings.isTransparent(), settings.getTransparentValue(), settings.scaleByValue());
 
         File output = SAVED_IMAGES_DIR.resolve(name + ".png").toFile();
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", output);
-            // System.out.println("Screenshot saved to " + output.getAbsolutePath()); for debugging
+            if (toDownloads) {
+                String userHome = System.getProperty("user.home");
+                File downloadsDir = new File(userHome, "Downloads");
+                File copy = new File(downloadsDir, name + ".png");
+                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", copy);
+            }
         } catch (IOException exception) {
-            System.err.println("Error: Failed to save screenshot: " + exception.getMessage());
-            System.exit(1);
+            showErrorDialog("Export Failed", "Pixeler could not export your image to the Downloads folder.\n\n Your image was not saved. Please try again", exception);
         }
     }
 
@@ -480,6 +485,10 @@ public class PixelScene extends Scene {
      */
     private void processSave(String name) {
         File boardData = SAVED_IMAGES_DATA_DIR.resolve(name + ".txt").toFile();
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy 'at' h:mm a");
+        pixelPane.setLastSavedTime(now.format(formatter));
+        saveMessage.setText("Last saved on:\n" + pixelPane.getLastSavedTime());
         try {
             FileWriter writer = new FileWriter(boardData);
             Color[][] board = pixelPane.getGridColors();
@@ -494,11 +503,7 @@ public class PixelScene extends Scene {
             writer.close();
             pixelPane.setName(name);
             canvasName.setText("Canvas Name:\n" + pixelPane);
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy 'at' h:mm a");
-            pixelPane.setLastSavedTime(now.format(formatter));
-            saveMessage.setText("Last saved on:\n" + pixelPane.getLastSavedTime());
-            exportOnly(name, new ExportSettings(FONT_COLOR, false, 1));
+            exportOnly(name, new ExportSettings(FONT_COLOR, false, 1), false);
             pixelPane.setHasChanged(false);
         } catch (IOException e) {
             showErrorDialog("Save Failed", "Pixeler was unable to save your canvas.\n\nYour changes have not been saved. Please check that you have enough storage space and permission to save files, then try again.\n", e);
