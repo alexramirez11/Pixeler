@@ -12,7 +12,7 @@ public class Driver extends Application {
 
     @Override
     public void start(Stage mainStage) throws Exception {
-        mainStage.setTitle("Pixel Art");
+        mainStage.setTitle("Pixeler");
         mainStage.setScene(PixelScene.initPixelScene());
         mainStage.show();
     }

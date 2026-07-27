@@ -1,4 +1,4 @@
-# Pixel Art
+# Pixeler
 
 ## Description
 This my own pixel art editor completely free to anyone who wants to give it a try. This application lets the user create pixel art, with or without grids, and allows them to save and load that art. When it is saved, it is exported as a png into the Saved_Images directory in the project. The data for each artwork is stored in a text file and is used to load the art for editing at any time. The art's data is saved in the Saved_Images_Data directory in the project.
