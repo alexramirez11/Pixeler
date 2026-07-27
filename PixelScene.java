@@ -16,6 +16,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
@@ -217,6 +218,20 @@ public class PixelScene extends Scene {
 
     private void processDiscard(ActionEvent e) {
         saveOptions.hide();
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy 'at' h:mm a");
+        if (!now.format(formatter).equalsIgnoreCase(pixelPane.getLastSavedTime())) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Confirm Exit");
+            alert.setHeaderText("You have unsaved changes.");
+            alert.setContentText("Are you sure you want to exit without saving?");
+            
+            alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.NO) {
+                return;
+            }
+        }
         Platform.runLater(() -> {initBuildMenu();});
     }
 
@@ -441,8 +456,7 @@ public class PixelScene extends Scene {
      */
     private void processSave(String name) {
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter =
-        DateTimeFormatter.ofPattern("MMMM d, yyyy 'at' h:mm a");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy 'at' h:mm a");
         pixelPane.setLastSavedTime(now.format(formatter));
         saveMessage.setText("Last saved on:\n" + pixelPane.getLastSavedTime());
 
