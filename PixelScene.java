@@ -2,6 +2,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
@@ -61,8 +64,14 @@ import javafx.stage.Screen;
  */
 public class PixelScene extends Scene {
 
-    private static BorderPane root;
+    private static final String APP_NAME = "Pixeler";
+    private static final Path APP_DATA_DIR = Paths.get(System.getenv("LOCALAPPDATA"), APP_NAME);
+    private static final Path SAVED_IMAGES_DIR = APP_DATA_DIR.resolve("Saved_Images");
+    private static final Path SAVED_IMAGES_DATA_DIR = APP_DATA_DIR.resolve("Saved_Images_Data");
+
     private final Color FONT_COLOR = Color.WHITE;
+
+    private static BorderPane root;
     private Label startMes, buildMes, canvasName, saveMessage;
     private Button startButton, createButton, loadButton, change, toggleGrid, flip, discardButton;
     private VBox startBox, settingsBox, sideMenu;
@@ -94,7 +103,25 @@ public class PixelScene extends Scene {
     private PixelScene(BorderPane root) {
         super(root, (Screen.getPrimary().getBounds().getWidth() - 100), (Screen.getPrimary().getBounds().getHeight() - 100), Color.BLACK);
 
+        initUserDirs();
         initStartMenu();
+    }
+
+    private void initUserDirs() {
+        try {
+            Files.createDirectories(SAVED_IMAGES_DIR);
+            Files.createDirectories(SAVED_IMAGES_DATA_DIR);
+        } catch (IOException e) {
+            showErrorDialog("Unable to initialize storage", "Pixeler could not create its save directories\n\n", e);
+        }
+    }
+
+    private void showErrorDialog(String title, String mes, Exception e) {
+        Alert alert= new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(mes);
+        alert.setContentText(e.getMessage());
+        alert.showAndWait();
     }
 
     /**
@@ -282,16 +309,16 @@ public class PixelScene extends Scene {
         loadLabel.setFont(new Font(50));
         loadLabel.setTextFill(FONT_COLOR);
         VBox loadFiles = new VBox();
-        File dir = new File("Saved_Images_Data");
+        File dir = SAVED_IMAGES_DATA_DIR.toFile();
         loadList = new LinkedList<>();
         if (dir.exists() && dir.isDirectory()) {
             File[] files = dir.listFiles();
             if (files != null) {
                 for (File f : files) {
-                    String img = "Saved_Images/" + f.getName().replace("txt", "png");
-                    Button selectable = new Button(img);
+                    Path img = SAVED_IMAGES_DIR.resolve(f.getName().replace(".txt", ".png"));
+                    Button selectable = new Button(f.getName().replace(".txt", ".png"));
                     try {
-                        Image image = new Image(img);
+                        Image image = new Image(img.toUri().toString());
                         BackgroundImage bg_img = new BackgroundImage(image, BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
                         Background bg = new Background(bg_img);
                         
@@ -347,7 +374,7 @@ public class PixelScene extends Scene {
      * @param fileName String of the name of the file of the existing image
      */
     private void processLoad(String fileName) {
-        File input = new File("Saved_Images_Data", fileName + ".txt");
+        File input = SAVED_IMAGES_DATA_DIR.resolve(fileName + ".txt").toFile();
         picker = new ColorPicker();
         try {
             Scanner scan = new Scanner(input);
@@ -439,7 +466,7 @@ public class PixelScene extends Scene {
     private void exportOnly(String name, ExportSettings settings) {
         WritableImage image = pixelPane.exportImage(settings.isTransparent(), settings.getTransparentValue(), settings.scaleByValue());
 
-        File output = new File("Saved_Images", name + ".png");
+        File output = SAVED_IMAGES_DIR.resolve(name + ".png").toFile();
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", output);
             // System.out.println("Screenshot saved to " + output.getAbsolutePath()); for debugging
@@ -460,7 +487,7 @@ public class PixelScene extends Scene {
         pixelPane.setLastSavedTime(now.format(formatter));
         saveMessage.setText("Last saved on:\n" + pixelPane.getLastSavedTime());
 
-        File boardData = new File("Saved_Images_Data", name + ".txt");
+        File boardData = SAVED_IMAGES_DATA_DIR.resolve(name + ".txt").toFile();
         try {
             FileWriter writer = new FileWriter(boardData);
             Color[][] board = pixelPane.getGridColors();
