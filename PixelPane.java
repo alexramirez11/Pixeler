@@ -38,6 +38,7 @@ public class PixelPane extends Pane {
     private String lastSavedTime;
     private boolean showGridLines = true;
     private boolean redrawQueued = false;
+    private boolean hasChanged;
     private Runnable finderDeactivated;
     
     /**
@@ -53,6 +54,7 @@ public class PixelPane extends Pane {
         this.rows = rows;
         this.cols = columns;
         this.picker = picker;
+        hasChanged = false;
         lastSavedTime = "never";
         if (color == null) {
             color = "black";
@@ -148,6 +150,7 @@ public class PixelPane extends Pane {
     }
 
     private void paintCell(double x, double y) {
+        hasChanged = true;
         int col = toColumn(x);
         int row = toRow(y);
 
@@ -162,6 +165,7 @@ public class PixelPane extends Pane {
     }
 
     private void floodFillIterative(int startRow, int startCol, Color replacement) {
+        hasChanged = true;
         Color target = gridColors[startRow][startCol];
         if (colorsAreEqual(target, replacement)) return;
 
@@ -219,6 +223,7 @@ public class PixelPane extends Pane {
     }
 
     public void setBackgroundColor(String col) {
+        hasChanged = true;
         if (col.startsWith("fx-background-color: ")) {
             col = col.replace("fx-background-color: ", "").trim();
         }
@@ -241,6 +246,7 @@ public class PixelPane extends Pane {
         gridColors = new Color[this.rows][this.cols];
         this.name = name;
         this.picker = picker;
+        hasChanged = false;
 
         for (String str : metaData) {
             String[] spiltStr = str.split("//");
@@ -459,6 +465,14 @@ public class PixelPane extends Pane {
 
     public String getLastSavedTime() {
         return lastSavedTime;
+    }
+
+    public void setHasChanged(boolean changed) {
+        hasChanged = changed;
+    }
+
+    public boolean hasChanged() {
+        return hasChanged;
     }
 
     public String toString() {

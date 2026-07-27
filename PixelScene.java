@@ -245,9 +245,7 @@ public class PixelScene extends Scene {
 
     private void processDiscard(ActionEvent e) {
         saveOptions.hide();
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM d, yyyy 'at' h:mm a");
-        if (!now.format(formatter).equalsIgnoreCase(pixelPane.getLastSavedTime())) {
+        if (pixelPane.hasChanged()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirm Exit");
             alert.setHeaderText("You have unsaved changes.");
@@ -361,8 +359,7 @@ public class PixelScene extends Scene {
         String name = "";
         for (Button b : loadList) {
             if (event.getSource() == b) {
-                String[] splitPath = b.getText().split("/");
-                name = splitPath[1].replace(".png", "");
+                name = b.getText().replace(".png", "");
                 break;
             }
         }
@@ -502,7 +499,7 @@ public class PixelScene extends Scene {
             pixelPane.setLastSavedTime(now.format(formatter));
             saveMessage.setText("Last saved on:\n" + pixelPane.getLastSavedTime());
             exportOnly(name, new ExportSettings(FONT_COLOR, false, 1));
-            
+            pixelPane.setHasChanged(false);
         } catch (IOException e) {
             showErrorDialog("Save Failed", "Pixeler was unable to save your canvas.\n\nYour changes have not been saved. Please check that you have enough storage space and permission to save files, then try again.\n", e);
         }
