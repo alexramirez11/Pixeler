@@ -364,7 +364,14 @@ public class PixelScene extends Scene {
             System.err.println("Directory containing each saved image's data could not be found.\nProgram shutting down...");
             System.exit(1);
         }
+        Button back = new Button("Back");
+        back.setStyle("-fx-background-color: orange");
+        back.setTextFill(FONT_COLOR);
+        back.setOnAction(this::processBack);
+        back.prefWidthProperty().bind(root.widthProperty().multiply(0.1));
+        back.prefHeightProperty().bind(root.heightProperty().multiply(0.1));
         loadFiles.getChildren().addAll(loadList);
+        loadFiles.getChildren().add(back);
         loadFiles.setStyle("-fx-background-color: black");
         loadFiles.setSpacing(20);
         loadFiles.setAlignment(Pos.CENTER);
@@ -377,6 +384,10 @@ public class PixelScene extends Scene {
 
         root.setCenter(sp);
         root.setRight(null);
+    }
+
+    private void processBack(ActionEvent e) {
+        initBuildMenu();
     }
 
     private void processLoadClick(ActionEvent event) {
