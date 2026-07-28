@@ -102,6 +102,7 @@ public class PixelScene extends Scene {
 
     private PixelScene(BorderPane root) {
         super(root, (Screen.getPrimary().getBounds().getWidth() - 100), (Screen.getPrimary().getBounds().getHeight() - 100), Color.BLACK);
+        getStylesheets().add(getClass().getResource("style.css").toExternalForm());
 
         initUserDirs();
         initStartMenu();
@@ -135,11 +136,9 @@ public class PixelScene extends Scene {
         startMes.setMaxWidth(Double.MAX_VALUE);
         startMes.setFont(new Font(100));
         startButton = new Button("Start Project");
-        startButton.setStyle("-fx-background-color: purple");
-        startButton.setTextFill(FONT_COLOR);
+        startButton.getStyleClass().add("start-button");
         startButton.setAlignment(Pos.CENTER);
         startButton.setOnAction(this::processStart);
-        startButton.setFont(new Font(60));
 
         startButton.maxWidthProperty().bind(root.widthProperty().multiply(0.6));
 
@@ -188,22 +187,18 @@ public class PixelScene extends Scene {
         pane.setAlignment(Pos.CENTER);
 
         loadButton = new Button("Load Existing Canvas");
-        loadButton.setStyle("-fx-background-color: orange");
+        loadButton.getStyleClass().add("loaders");
         loadButton.setAlignment(Pos.CENTER);
-        loadButton.setTextFill(FONT_COLOR);
         loadButton.setMaxWidth(800);
         loadButton.setPrefHeight(100);
         loadButton.setOnAction(this::loadSettings);
-        loadButton.setFont(new Font(60));
 
         createButton = new Button("Create Canvas");
-        createButton.setStyle("-fx-background-color: purple");
+        createButton.getStyleClass().add("start-button");
         createButton.setAlignment(Pos.CENTER);
-        createButton.setTextFill(FONT_COLOR);
         createButton.setMaxWidth(800);
         createButton.setPrefHeight(100);
         createButton.setOnAction(this::processBuild);
-        createButton.setFont(new Font(60));
 
         settingsBox = new VBox(buildMes, pane, createButton, loadButton);
         settingsBox.setAlignment(Pos.CENTER);
@@ -365,8 +360,7 @@ public class PixelScene extends Scene {
             System.exit(1);
         }
         Button back = new Button("Back");
-        back.setStyle("-fx-background-color: orange");
-        back.setTextFill(FONT_COLOR);
+        back.getStyleClass().add("exits");
         back.setOnAction(this::processBack);
         back.prefWidthProperty().bind(root.widthProperty().multiply(0.1));
         back.prefHeightProperty().bind(root.heightProperty().multiply(0.1));
@@ -592,13 +586,11 @@ public class PixelScene extends Scene {
         exportItem.setOnAction(this::processExport);
 
         discardButton = new Button("Exit");
-        discardButton.setStyle("-fx-background-color: orange");
-        discardButton.setTextFill(FONT_COLOR);
+        discardButton.getStyleClass().add("exits");
         discardButton.setOnAction(this::processDiscard);
 
         delete = new Button("DELETE");
-        delete.setStyle("-fx-background-color: red");
-        delete.setTextFill(FONT_COLOR);
+        delete.getStyleClass().add("delete");
         delete.setOnAction(this::processDelete);
 
         saveMessage = new Label("Last saved on:\n" + pixelPane.getLastSavedTime());
@@ -606,19 +598,17 @@ public class PixelScene extends Scene {
 
         change = new Button("Change\nGridlines");
         change.setMinSize(40, 20);
-        change.setStyle("-fx-background-color: blue");
-        change.setTextFill(Color.WHITE);
+        change.getStyleClass().add("changes");
         change.setOnAction(this::processChangeOnBackBoard);
         change.setCursor(Cursor.HAND);
         toggleGrid = new Button("Toggle Gridlines");
         toggleGrid.setMinSize(40, 20);
-        toggleGrid.setStyle("-fx-background-color: blue");
-        toggleGrid.setTextFill(Color.WHITE);
+        toggleGrid.getStyleClass().add("changes");
         toggleGrid.setOnAction(this::processGridToggle);
         toggleGrid.setCursor(Cursor.HAND);
 
         flip = new Button("Flip");
-        flip.setStyle("-fx-background-color: magenta");
+        flip.getStyleClass().add("changes");
         flip.setTextFill(FONT_COLOR);
         flip.setOnAction(this::processFlip);
 
@@ -637,7 +627,6 @@ public class PixelScene extends Scene {
 
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.setStyle("-fx-background-color: transparent");
 
         sideMenu = new VBox(picker, saveOptions, discardButton, colorsBox, change, toggleGrid, flip, colorTools, canvasName, saveMessage, delete);
         picker.prefWidthProperty().bind(sideMenu.widthProperty().multiply(1));

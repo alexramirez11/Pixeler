@@ -1,0 +1,93 @@
+.start-button {
+    -fx-font-size: 60px;
+    font-size: 60px;
+    -fx-background-color: purple;
+    background-color: purple;
+}
+
+.loaders {
+    -fx-background-color: orange;
+    background-color: orange;
+    -fx-font-size: 60px;
+    font-size: 60px;
+}
+
+.exits {
+    -fx-background-color: orange;
+    background-color: orange;
+}
+
+.scroll-pane {
+    -fx-background-color: dimgrey;
+    background-color: dimgrey;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: dimgrey;
+    background-color: dimgray;
+}
+
+.scroll-pane .corner {
+    -fx-background-color: dimgrey;
+    background-color: dimgray;
+}
+
+.changes {
+    -fx-background-color: blue;
+    background-color: blue;
+}
+
+.delete {
+    -fx-background-color: red;
+    background-color: red;
+}
+
+.button {
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+    cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: lightgreen;
+    background-color: lightgreen;
+    -fx-text-fill: black;
+}
+
+.combo-box {
+    -fx-background-color: darkorange;
+    background-color: darkorange;
+    -fx-border-color: white;
+    border-color: white;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: white;
+}
+
+.combo-box .arrow-button {
+    -fx-background-color: purple;
+    background-color: purple;
+}
+
+.combo-box .arrow {
+    -fx-background-color: white;
+    background-color: white;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: black;
+    background-color: black;
+}
+
+.combo-box-popup .list-cell {
+    -fx-background-color: black;
+    background-color: black;
+    -fx-text-fill: white;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: lightgreen;
+    background-color: lightgreen;
+    -fx-text-fill: black;
+}
