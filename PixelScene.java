@@ -73,7 +73,7 @@ public class PixelScene extends Scene {
 
     private static BorderPane root;
     private Label startMes, buildMes, canvasName, saveMessage;
-    private Button startButton, createButton, loadButton, change, toggleGrid, flip, discardButton;
+    private Button startButton, createButton, loadButton, change, toggleGrid, flip, discardButton, delete;
     private VBox startBox, settingsBox, sideMenu;
     private HBox colorTools;
     private ComboBox<String> colorsBox;
@@ -258,6 +258,30 @@ public class PixelScene extends Scene {
             }
         }
         Platform.runLater(() -> {initBuildMenu();});
+    }
+
+    private void processDelete(ActionEvent e) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Deletion");
+        alert.setHeaderText("Delete Canvas");
+        alert.setContentText("Are you sure you want to delete this canvas? This CANNOT be undone!");
+
+        alert.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isEmpty() || result.get() == ButtonType.NO) {
+            return;
+        }
+
+        String name = pixelPane.toString();
+        Path imageFile = SAVED_IMAGES_DIR.resolve(name + ".png");
+        Path dataFile = SAVED_IMAGES_DATA_DIR.resolve(name + ".txt");
+        try {
+            Files.deleteIfExists(imageFile);
+            Files.deleteIfExists(dataFile);
+            Platform.runLater(() -> {initBuildMenu();});
+        } catch (IOException ex) {
+            showErrorDialog("Deletion Failed", "Pixeler could not delete the canvas", ex);
+        }
     }
 
     /**
@@ -466,7 +490,9 @@ public class PixelScene extends Scene {
 
         File output = SAVED_IMAGES_DIR.resolve(name + ".png").toFile();
         try {
-            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", output);
+            if (!pixelPane.hasChanged()) {
+                ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", output);
+            }
             if (toDownloads) {
                 String userHome = System.getProperty("user.home");
                 File downloadsDir = new File(userHome, "Downloads");
@@ -559,6 +585,11 @@ public class PixelScene extends Scene {
         discardButton.setTextFill(FONT_COLOR);
         discardButton.setOnAction(this::processDiscard);
 
+        delete = new Button("DELETE");
+        delete.setStyle("-fx-background-color: red");
+        delete.setTextFill(FONT_COLOR);
+        delete.setOnAction(this::processDelete);
+
         saveMessage = new Label("Last saved on:\n" + pixelPane.getLastSavedTime());
         saveMessage.setTextFill(Color.LIMEGREEN);
 
@@ -597,11 +628,13 @@ public class PixelScene extends Scene {
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setStyle("-fx-background-color: transparent");
 
-        sideMenu = new VBox(picker, saveOptions, discardButton, colorsBox, change, toggleGrid, flip, colorTools, canvasName, saveMessage);
+        sideMenu = new VBox(picker, saveOptions, discardButton, colorsBox, change, toggleGrid, flip, colorTools, canvasName, saveMessage, delete);
         picker.prefWidthProperty().bind(sideMenu.widthProperty().multiply(1));
         picker.prefHeightProperty().bind(sideMenu.heightProperty().multiply(0.08));
         discardButton.prefWidthProperty().bind(sideMenu.widthProperty().multiply(0.3));
         discardButton.prefHeightProperty().bind(sideMenu.heightProperty().multiply(0.05));
+        delete.prefWidthProperty().bind(sideMenu.widthProperty().multiply(0.3));
+        delete.prefHeightProperty().bind(sideMenu.heightProperty().multiply(0.05));
         flip.prefWidthProperty().bind(sideMenu.widthProperty().multiply(0.3));
         flip.prefHeightProperty().bind(sideMenu.heightProperty().multiply(0.05));
         colorTools.prefWidthProperty().bind(sideMenu.widthProperty().multiply(1));
