@@ -5,6 +5,12 @@
     background-color: purple;
 }
 
+.start-button:hover {
+    -fx-background-color: lightgreen;
+    background-color: lightgreen;
+    -fx-text-fill: black;
+}
+
 .loaders {
     -fx-background-color: orange;
     background-color: orange;
@@ -12,9 +18,21 @@
     font-size: 60px;
 }
 
+.loaders:hover {
+    -fx-background-color: lightgreen;
+    background-color: lightgreen;
+    -fx-text-fill: black;
+}
+
 .exits {
     -fx-background-color: orange;
     background-color: orange;
+}
+
+.exits:hover {
+    -fx-background-color: lightgreen;
+    background-color: lightgreen;
+    -fx-text-fill: black;
 }
 
 .scroll-pane {
@@ -37,21 +55,27 @@
     background-color: blue;
 }
 
+.changes:hover {
+    -fx-background-color: lightgreen;
+    background-color: lightgreen;
+    -fx-text-fill: black;
+}
+
 .delete {
     -fx-background-color: red;
     background-color: red;
+}
+
+.delete:hover {
+    -fx-background-color: lightgreen;
+    background-color: lightgreen;
+    -fx-text-fill: black;
 }
 
 .button {
     -fx-text-fill: white;
     -fx-cursor: hand;
     cursor: hand;
-}
-
-.button:hover {
-    -fx-background-color: lightgreen;
-    background-color: lightgreen;
-    -fx-text-fill: black;
 }
 
 .combo-box {
