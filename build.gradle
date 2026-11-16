@@ -1,0 +1,23 @@
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+javafx {
+    version = '17'
+    modules = ['javafx.controls', 'javafx.graphics', 'javafx.fxml', 'javafx.media', 'javafx.swing', 'javafx.web']
+}
+
+application {
+    mainClass = 'Driver'
+}

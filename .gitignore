@@ -2,3 +2,6 @@
 bin/
 lib/
 *.class
+build/
+*.exe
+.gradle/

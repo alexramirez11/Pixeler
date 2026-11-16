@@ -65,7 +65,7 @@ import javafx.stage.Screen;
 public class PixelScene extends Scene {
 
     private static final String APP_NAME = "Pixeler";
-    private static final Path APP_DATA_DIR = Paths.get(System.getenv("LOCALAPPDATA"), APP_NAME);
+    private static final Path APP_DATA_DIR = Paths.get(System.getenv().getOrDefault("LOCALAPPDATA", System.getProperty("user.home")), APP_NAME);
     private static final Path SAVED_IMAGES_DIR = APP_DATA_DIR.resolve("Saved_Images");
     private static final Path SAVED_IMAGES_DATA_DIR = APP_DATA_DIR.resolve("Saved_Images_Data");
 
@@ -82,11 +82,11 @@ public class PixelScene extends Scene {
     private PixelPane pixelPane;
     private ScrollPane scrollPane;
     private LinkedList<Button> loadList;
-    private Image bucketOnImage = new Image("assets/bucket-on.png");
-    private Image bucketOffImage = new Image("assets/bucket-off.png");
+    private Image bucketOnImage = new Image(getClass().getResource("/assets/bucket-on.png").toExternalForm());
+    private Image bucketOffImage = new Image(getClass().getResource("/assets/bucket-off.png").toExternalForm());
     private ImageView bucketView = new ImageView(bucketOffImage);
-    private Image magnifyOnImage = new Image("assets/magnifying_on.png");
-    private Image magnifyOffImage = new Image("assets/magnifying_off.png");
+    private Image magnifyOnImage = new Image(getClass().getResource("/assets/magnifying_on.png").toExternalForm());
+    private Image magnifyOffImage = new Image(getClass().getResource("/assets/magnifying_off.png").toExternalForm());
     private ImageView finderView = new ImageView(magnifyOffImage);
     private MenuButton saveOptions;
     
@@ -102,7 +102,7 @@ public class PixelScene extends Scene {
 
     private PixelScene(BorderPane root) {
         super(root, (Screen.getPrimary().getBounds().getWidth() - 100), (Screen.getPrimary().getBounds().getHeight() - 100), Color.BLACK);
-        getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+        getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
 
         initUserDirs();
         initStartMenu();
