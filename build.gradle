@@ -1,7 +1,11 @@
 plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
+    id 'com.gluonhq.gluonfx-gradle-plugin' version '1.0.29'
 }
+
+group = 'com.pixeler'
+version = '1.0.0'
 
 repositories {
     mavenCentral()
@@ -20,4 +24,10 @@ javafx {
 
 application {
     mainClass = 'Driver'
+}
+
+gluonfx {
+    target = 'host'
+    graalvmHome = System.getenv('GRAALVM_HOME')
+    verbose = true
 }
