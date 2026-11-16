@@ -5,3 +5,4 @@ lib/
 build/
 *.exe
 .gradle/
+META-INF/

@@ -23,7 +23,10 @@ javafx {
 }
 
 application {
-    mainClass = 'Driver'
+    mainClass = 'Main'
+    applicationDefaultJvmArgs = [
+        '--enable-native-access=ALL-UNNAMED'
+    ]
 }
 
 gluonfx {
